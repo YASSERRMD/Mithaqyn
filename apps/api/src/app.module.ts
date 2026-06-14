@@ -31,6 +31,8 @@ import { SlaModule } from './modules/sla/sla.module';
 import { VersionsModule } from './modules/versions/versions.module';
 import { PlaybookModule } from './modules/playbook/playbook.module';
 import { ClauseLibraryModule } from './modules/clause-library/clause-library.module';
+import { RedlineModule } from './modules/redline/redline.module';
+import { ImportModule } from './modules/import/import.module';
 
 @Module({
   imports: [
@@ -72,6 +74,8 @@ import { ClauseLibraryModule } from './modules/clause-library/clause-library.mod
     VersionsModule,
     PlaybookModule,
     ClauseLibraryModule,
+    RedlineModule,
+    ImportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
