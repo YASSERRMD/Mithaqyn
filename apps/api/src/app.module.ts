@@ -10,6 +10,7 @@ import { ContractsModule } from './modules/contracts/contracts.module';
 import { CounterpartiesModule } from './modules/counterparties/counterparties.module';
 import { AIModule } from './modules/ai/ai.module';
 import { ClausesModule } from './modules/clauses/clauses.module';
+import { RisksModule } from './modules/risks/risks.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ClausesModule } from './modules/clauses/clauses.module';
     CounterpartiesModule,
     AIModule,
     ClausesModule,
+    RisksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
