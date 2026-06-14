@@ -129,6 +129,8 @@ model User {
   playbooks       Playbook[]
   clauseTemplates ClauseTemplate[]
   importJobs      ImportJob[]
+  notifications   Notification[]
+  reminders       Reminder[]
 
   @@map("users")
 }
@@ -199,6 +201,7 @@ model Contract {
   negotiationRounds NegotiationRound[]
   signingRequests  SigningRequest[]
   procurementRef   ProcurementRef?
+  reminders        Reminder[]
 
   @@map("contracts")
 }
@@ -703,4 +706,59 @@ model ImportJob {
   updatedAt    DateTime     @updatedAt
 
   @@map("import_jobs")
+}
+
+// ─── Notifications & Reminders ────────────────────────────────────────────────
+
+enum NotificationType {
+  CONTRACT_EXPIRING
+  OBLIGATION_DUE
+  APPROVAL_REQUIRED
+  APPROVAL_COMPLETED
+  RENEWAL_UPCOMING
+  SLA_BREACH
+  IMPORT_COMPLETED
+  SYSTEM
+}
+
+enum ReminderType {
+  CONTRACT_EXPIRY
+  OBLIGATION_DEADLINE
+  RENEWAL_NOTICE
+  CUSTOM
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       NotificationType
+  title      String
+  message    String
+  entityType String?          // CONTRACT | OBLIGATION | RENEWAL | APPROVAL | SLA
+  entityId   String?
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+model Reminder {
+  id           String       @id @default(uuid())
+  contractId   String?
+  contract     Contract?    @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  message      String?
+  reminderType ReminderType
+  scheduledAt  DateTime
+  isTriggered  Boolean      @default(false)
+  triggeredAt  DateTime?
+  recurrence   String?      // ONCE | DAILY | WEEKLY | MONTHLY
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("reminders")
 }
