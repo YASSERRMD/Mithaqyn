@@ -184,6 +184,7 @@ model Contract {
   renewalEvents    RenewalEvent[]
   analysisJobs     AIAnalysisJob[]
   embeddings       ContractEmbedding[]
+  chatSessions     ChatSession[]
 
   @@map("contracts")
 }
@@ -360,6 +361,34 @@ model ClauseEmbedding {
   createdAt  DateTime @default(now())
 
   @@map("clause_embeddings")
+}
+
+// ─── RAG Chat ──────────────────────────────────────────────────────────────────
+
+model ChatSession {
+  id         String    @id @default(uuid())
+  contractId String?
+  contract   Contract? @relation(fields: [contractId], references: [id])
+  userId     String
+  title      String    @default("New Chat")
+  scope      String    @default("CONTRACT")  // CONTRACT | REPOSITORY
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  messages   ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String      // user | assistant
+  content   String
+  citations Json?       // [{contractId, chunkText, score}]
+  createdAt DateTime    @default(now())
+
+  @@map("chat_messages")
 }
 
 // ─── AI Provider Configs ───────────────────────────────────────────────────────
