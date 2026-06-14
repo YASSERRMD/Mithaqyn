@@ -22,6 +22,7 @@ import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 import { RagModule } from './modules/rag/rag.module';
 import { ApprovalsModule } from './modules/approvals/approvals.module';
 import { NegotiationModule } from './modules/negotiation/negotiation.module';
+import { EsignatureModule } from './modules/esignature/esignature.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { NegotiationModule } from './modules/negotiation/negotiation.module';
     RagModule,
     ApprovalsModule,
     NegotiationModule,
+    EsignatureModule,
   ],
   controllers: [AppController],
   providers: [AppService],
