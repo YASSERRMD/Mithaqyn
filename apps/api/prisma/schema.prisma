@@ -183,6 +183,7 @@ model Contract {
   obligations      Obligation[]
   renewalEvents    RenewalEvent[]
   analysisJobs     AIAnalysisJob[]
+  embeddings       ContractEmbedding[]
 
   @@map("contracts")
 }
@@ -271,6 +272,8 @@ model Clause {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
+  embedding    ClauseEmbedding?
+
   @@map("clauses")
 }
 
@@ -329,6 +332,34 @@ model RenewalEvent {
   createdAt        DateTime  @default(now())
 
   @@map("renewal_events")
+}
+
+// ─── Embeddings ────────────────────────────────────────────────────────────────
+
+model ContractEmbedding {
+  id           String   @id @default(uuid())
+  contractId   String
+  contract     Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  chunkIndex   Int
+  chunkText    String
+  embedding    Float[]
+  tokenCount   Int?
+  model        String
+  createdAt    DateTime @default(now())
+
+  @@unique([contractId, chunkIndex])
+  @@map("contract_embeddings")
+}
+
+model ClauseEmbedding {
+  id         String   @id @default(uuid())
+  clauseId   String   @unique
+  clause     Clause   @relation(fields: [clauseId], references: [id], onDelete: Cascade)
+  embedding  Float[]
+  model      String
+  createdAt  DateTime @default(now())
+
+  @@map("clause_embeddings")
 }
 
 // ─── AI Provider Configs ───────────────────────────────────────────────────────

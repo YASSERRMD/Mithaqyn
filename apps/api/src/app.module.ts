@@ -17,6 +17,7 @@ import { ComparisonModule } from './modules/comparison/comparison.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OcrModule } from './modules/ocr/ocr.module';
+import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { OcrModule } from './modules/ocr/ocr.module';
     DashboardModule,
     AuditModule,
     OcrModule,
+    EmbeddingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

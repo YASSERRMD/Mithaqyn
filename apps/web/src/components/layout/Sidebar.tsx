@@ -12,6 +12,7 @@ import {
   ClipboardList,
   Users,
   LogOut,
+  Search,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
@@ -25,6 +26,7 @@ const navItems = [
   { href: '/obligations', label: 'Obligations', icon: CheckSquare },
   { href: '/renewals', label: 'Renewals', icon: RefreshCw },
   { href: '/comparison', label: 'Compare', icon: GitCompare },
+  { href: '/search', label: 'Semantic Search', icon: Search },
 ];
 
 const adminItems = [
