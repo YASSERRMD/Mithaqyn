@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { CounterpartiesModule } from './modules/counterparties/counterparties.module';
+import { AIModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CounterpartiesModule } from './modules/counterparties/counterparties.mo
     UsersModule,
     ContractsModule,
     CounterpartiesModule,
+    AIModule,
   ],
   controllers: [AppController],
   providers: [AppService],
