@@ -1,0 +1,350 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  LEGAL_ADMIN
+  CONTRACT_MANAGER
+  REVIEWER
+  AUDITOR
+  VIEWER
+}
+
+enum ContractType {
+  MASTER_AGREEMENT
+  AMENDMENT
+  PROCUREMENT_AGREEMENT
+  VENDOR_AGREEMENT
+  NDA
+  SLA
+  MOU
+  LEASE
+  EMPLOYMENT_CONTRACT
+  CUSTOM
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  TERMINATED
+  UNDER_REVIEW
+  PENDING_SIGNATURE
+  ARCHIVED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ClauseType {
+  PAYMENT_TERMS
+  TERMINATION
+  RENEWAL
+  LIABILITY
+  INDEMNITY
+  CONFIDENTIALITY
+  GOVERNING_LAW
+  JURISDICTION
+  SLA
+  PENALTIES
+  FORCE_MAJEURE
+  DATA_PROTECTION
+  INTELLECTUAL_PROPERTY
+  ASSIGNMENT
+  DISPUTE_RESOLUTION
+  AUDIT_RIGHTS
+  INSURANCE
+  COMPLIANCE
+  SUBCONTRACTING
+  CHANGE_CONTROL
+}
+
+enum ObligationStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+  WAIVED
+  CANCELLED
+}
+
+enum AnalysisType {
+  CLAUSE_EXTRACTION
+  RISK_SCORING
+  OBLIGATION_EXTRACTION
+  RENEWAL_PREDICTION
+  SUMMARIZATION
+}
+
+enum AIProviderName {
+  openai
+  azure_openai
+  anthropic
+  google_gemini
+  mistral
+  cohere
+  groq
+  together
+  deepseek
+  ollama
+  openai_compatible
+}
+
+// ─── Auth / Users ──────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole @default(VIEWER)
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  contracts    Contract[]
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+// ─── Counterparty ──────────────────────────────────────────────────────────────
+
+model Counterparty {
+  id                 String   @id @default(uuid())
+  name               String
+  type               String   @default("VENDOR")
+  registrationNumber String?
+  email              String?
+  country            String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  contracts Contract[]
+
+  @@map("counterparties")
+}
+
+// ─── Contracts ─────────────────────────────────────────────────────────────────
+
+model Contract {
+  id               String         @id @default(uuid())
+  title            String
+  contractNumber   String?        @unique
+  type             ContractType
+  status           ContractStatus @default(DRAFT)
+  description      String?
+  effectiveDate    DateTime?
+  expiryDate       DateTime?
+  renewalDate      DateTime?
+  autoRenewal      Boolean        @default(false)
+  noticePeriodDays Int?
+  value            Decimal?       @db.Decimal(15, 2)
+  currency         String?        @default("USD")
+  tags             String[]       @default([])
+  riskScore        Float?
+  riskLevel        RiskLevel?
+
+  counterpartyId   String
+  counterparty     Counterparty   @relation(fields: [counterpartyId], references: [id])
+
+  createdById      String
+  createdBy        User           @relation(fields: [createdById], references: [id])
+
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  documents        ContractDocument[]
+  versions         ContractVersion[]
+  clauses          Clause[]
+  riskFindings     RiskFinding[]
+  obligations      Obligation[]
+  renewalEvents    RenewalEvent[]
+  analysisJobs     AIAnalysisJob[]
+
+  @@map("contracts")
+}
+
+model ContractDocument {
+  id           String   @id @default(uuid())
+  contractId   String
+  contract     Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  filename     String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  storagePath  String
+  extractedText String?
+  pageCount    Int?
+  uploadedAt   DateTime @default(now())
+
+  @@map("contract_documents")
+}
+
+model ContractVersion {
+  id          String   @id @default(uuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  versionNum  Int
+  snapshot    Json
+  changedById String?
+  changedAt   DateTime @default(now())
+
+  @@map("contract_versions")
+}
+
+// ─── Clauses ───────────────────────────────────────────────────────────────────
+
+model Clause {
+  id           String      @id @default(uuid())
+  contractId   String
+  contract     Contract    @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  type         ClauseType
+  title        String
+  summary      String
+  textExcerpt  String
+  confidence   Float
+  riskLevel    RiskLevel
+  pageRef      Int?
+  reviewStatus String      @default("PENDING")
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("clauses")
+}
+
+// ─── Risk Findings ─────────────────────────────────────────────────────────────
+
+model RiskFinding {
+  id             String    @id @default(uuid())
+  contractId     String
+  contract       Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  category       String
+  severity       RiskLevel
+  title          String
+  explanation    String
+  recommendation String
+  confidence     Float
+  status         String    @default("OPEN")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("risk_findings")
+}
+
+// ─── Obligations ───────────────────────────────────────────────────────────────
+
+model Obligation {
+  id           String           @id @default(uuid())
+  contractId   String
+  contract     Contract         @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  owner        String?
+  dueDate      DateTime?
+  reminderDate DateTime?
+  status       ObligationStatus @default(OPEN)
+  priority     String           @default("MEDIUM")
+  isEscalated  Boolean          @default(false)
+  evidence     String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@map("obligations")
+}
+
+// ─── Renewal Events ────────────────────────────────────────────────────────────
+
+model RenewalEvent {
+  id               String   @id @default(uuid())
+  contractId       String
+  contract         Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  expiryDate       DateTime?
+  renewalDate      DateTime?
+  autoRenewal      Boolean   @default(false)
+  noticePeriodDays Int?
+  renewalRiskScore Float?
+  notified         Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+
+  @@map("renewal_events")
+}
+
+// ─── AI Provider Configs ───────────────────────────────────────────────────────
+
+model AIProviderConfig {
+  id                String         @id @default(uuid())
+  name              String
+  provider          AIProviderName
+  model             String
+  embeddingModel    String?
+  baseUrl           String?
+  encryptedApiKey   String?
+  isActive          Boolean        @default(true)
+  isDefault         Boolean        @default(false)
+  maxTokens         Int?
+  temperature       Float?         @default(0.1)
+  timeout           Int?           @default(30000)
+  maxRetries        Int?           @default(3)
+  customHeaders     Json?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  analysisJobs AIAnalysisJob[]
+
+  @@map("ai_provider_configs")
+}
+
+// ─── AI Analysis Jobs ──────────────────────────────────────────────────────────
+
+model AIAnalysisJob {
+  id           String           @id @default(uuid())
+  contractId   String
+  contract     Contract         @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  providerId   String?
+  provider     AIProviderConfig? @relation(fields: [providerId], references: [id])
+  analysisType AnalysisType
+  status       String           @default("PENDING")
+  result       Json?
+  error        String?
+  tokensUsed   Int?
+  durationMs   Int?
+  createdAt    DateTime         @default(now())
+  completedAt  DateTime?
+
+  @@map("ai_analysis_jobs")
+}
+
+// ─── Audit Logs ────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  entity     String
+  entityId   String?
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
