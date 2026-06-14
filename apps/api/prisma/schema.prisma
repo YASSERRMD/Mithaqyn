@@ -187,6 +187,7 @@ model Contract {
   embeddings       ContractEmbedding[]
   chatSessions     ChatSession[]
   negotiationRounds NegotiationRound[]
+  signingRequests  SigningRequest[]
 
   @@map("contracts")
 }
@@ -516,4 +517,26 @@ model AuditLog {
   createdAt  DateTime @default(now())
 
   @@map("audit_logs")
+}
+
+// ─── E-Signature ───────────────────────────────────────────────────────────────
+
+model SigningRequest {
+  id            String   @id @default(uuid())
+  contractId    String
+  contract      Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  provider      String   // DOCUSIGN | ADOBE_SIGN | UAE_PASS | MANUAL
+  status        String   @default("PENDING") // PENDING | SENT | SIGNED | DECLINED | EXPIRED | CANCELLED
+  externalId    String?  // Provider's envelope/transaction ID
+  signerEmail   String
+  signerName    String
+  redirectUrl   String?
+  callbackData  Json?
+  sentAt        DateTime?
+  signedAt      DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("signing_requests")
 }
