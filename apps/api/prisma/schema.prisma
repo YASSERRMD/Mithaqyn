@@ -186,6 +186,7 @@ model Contract {
   approvalWorkflow ApprovalWorkflow?
   embeddings       ContractEmbedding[]
   chatSessions     ChatSession[]
+  negotiationRounds NegotiationRound[]
 
   @@map("contracts")
 }
@@ -464,6 +465,39 @@ model ApprovalStep {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   @@map("approval_steps")
+}
+
+// ─── Negotiation ───────────────────────────────────────────────────────────────
+
+model NegotiationRound {
+  id           String   @id @default(uuid())
+  contractId   String
+  contract     Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  roundNumber  Int
+  status       String   @default("OPEN") // OPEN | CLOSED | AGREED
+  summary      String?
+  startedAt    DateTime @default(now())
+  closedAt     DateTime?
+  createdAt    DateTime @default(now())
+  comments     ClauseComment[]
+
+  @@unique([contractId, roundNumber])
+  @@map("negotiation_rounds")
+}
+
+model ClauseComment {
+  id          String           @id @default(uuid())
+  roundId     String
+  round       NegotiationRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  clauseId    String?
+  author      String           // INTERNAL | COUNTERPARTY
+  authorName  String
+  content     String
+  isResolved  Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("clause_comments")
 }
 
 // ─── Audit Logs ────────────────────────────────────────────────────────────────
