@@ -183,6 +183,7 @@ model Contract {
   obligations      Obligation[]
   renewalEvents    RenewalEvent[]
   analysisJobs     AIAnalysisJob[]
+  approvalWorkflow ApprovalWorkflow?
   embeddings       ContractEmbedding[]
   chatSessions     ChatSession[]
 
@@ -434,6 +435,35 @@ model AIAnalysisJob {
   completedAt  DateTime?
 
   @@map("ai_analysis_jobs")
+}
+
+// ─── Approval Workflows ────────────────────────────────────────────────────────
+
+model ApprovalWorkflow {
+  id         String   @id @default(uuid())
+  contractId String   @unique
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  status     String   @default("PENDING") // PENDING | IN_PROGRESS | APPROVED | REJECTED
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  steps      ApprovalStep[]
+  @@map("approval_workflows")
+}
+
+model ApprovalStep {
+  id              String           @id @default(uuid())
+  workflowId      String
+  workflow        ApprovalWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  stepOrder       Int
+  role            String           // LEGAL_ADMIN | FINANCE | PROCUREMENT | MANAGEMENT
+  assigneeId      String?
+  status          String           @default("PENDING") // PENDING | APPROVED | REJECTED | SKIPPED
+  comment         String?
+  rejectionReason String?
+  decidedAt       DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  @@map("approval_steps")
 }
 
 // ─── Audit Logs ────────────────────────────────────────────────────────────────
