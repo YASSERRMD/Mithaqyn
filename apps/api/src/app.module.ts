@@ -12,6 +12,7 @@ import { AIModule } from './modules/ai/ai.module';
 import { ClausesModule } from './modules/clauses/clauses.module';
 import { RisksModule } from './modules/risks/risks.module';
 import { ObligationsModule } from './modules/obligations/obligations.module';
+import { RenewalsModule } from './modules/renewals/renewals.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ObligationsModule } from './modules/obligations/obligations.module';
     ClausesModule,
     RisksModule,
     ObligationsModule,
+    RenewalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
