@@ -88,6 +88,14 @@ enum AnalysisType {
   SUMMARIZATION
 }
 
+enum OcrStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  SKIPPED
+}
+
 enum AIProviderName {
   openai
   azure_openai
@@ -180,19 +188,56 @@ model Contract {
 }
 
 model ContractDocument {
-  id           String   @id @default(uuid())
-  contractId   String
-  contract     Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
-  filename     String
-  originalName String
-  mimeType     String
-  sizeBytes    Int
-  storagePath  String
+  id            String    @id @default(uuid())
+  contractId    String
+  contract      Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  filename      String
+  originalName  String
+  mimeType      String
+  sizeBytes     Int
+  storagePath   String
   extractedText String?
-  pageCount    Int?
-  uploadedAt   DateTime @default(now())
+  pageCount     Int?
+  ocrEngine     String?
+  ocrConfidence Float?
+  uploadedAt    DateTime  @default(now())
+
+  ocrJobs       OcrJob[]
 
   @@map("contract_documents")
+}
+
+model OcrJob {
+  id          String      @id @default(uuid())
+  documentId  String
+  document    ContractDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  status      OcrStatus   @default(PENDING)
+  engine      String      @default("pdf-parse")
+  confidence  Float?
+  pageCount   Int?
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+
+  pages       DocumentPage[]
+
+  @@map("ocr_jobs")
+}
+
+model DocumentPage {
+  id         String   @id @default(uuid())
+  jobId      String
+  job        OcrJob   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  documentId String
+  pageNumber Int
+  text       String
+  confidence Float?
+  wordCount  Int?
+  createdAt  DateTime @default(now())
+
+  @@unique([jobId, pageNumber])
+  @@map("document_pages")
 }
 
 model ContractVersion {
