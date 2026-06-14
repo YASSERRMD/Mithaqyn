@@ -260,6 +260,8 @@ model ContractVersion {
   versionNum  Int
   snapshot    Json
   changedById String?
+  action      String?
+  notes       String?
   changedAt   DateTime @default(now())
 
   @@map("contract_versions")
@@ -325,6 +327,8 @@ model Obligation {
   evidence     String?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
+
+  slaMetrics   SlaMetric[]
 
   @@map("obligations")
 }
@@ -566,4 +570,43 @@ model SigningRequest {
   updatedAt     DateTime @updatedAt
 
   @@map("signing_requests")
+}
+
+// ─── SLA & Performance Obligations ────────────────────────────────────────────
+
+enum SlaStatus {
+  MET
+  BREACHED
+  AT_RISK
+  PENDING
+}
+
+model SlaMetric {
+  id                String     @id @default(uuid())
+  obligationId      String
+  obligation        Obligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+  metricName        String
+  targetValue       Float
+  unit              String
+  measurementPeriod String
+  penaltyPerBreach  Decimal?   @db.Decimal(15, 2)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  slaRecords SlaRecord[]
+
+  @@map("sla_metrics")
+}
+
+model SlaRecord {
+  id          String    @id @default(uuid())
+  slaMetricId String
+  slaMetric   SlaMetric @relation(fields: [slaMetricId], references: [id], onDelete: Cascade)
+  recordedAt  DateTime
+  actualValue Float
+  status      SlaStatus
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  @@map("sla_records")
 }

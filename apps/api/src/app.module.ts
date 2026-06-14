@@ -27,6 +27,8 @@ import { ProcurementModule } from './modules/procurement/procurement.module';
 import { FinancialModule } from './modules/financial/financial.module';
 import { PrivacyModule } from './modules/privacy/privacy.module';
 import { JurisdictionModule } from './modules/jurisdiction/jurisdiction.module';
+import { SlaModule } from './modules/sla/sla.module';
+import { VersionsModule } from './modules/versions/versions.module';
 
 @Module({
   imports: [
@@ -64,6 +66,8 @@ import { JurisdictionModule } from './modules/jurisdiction/jurisdiction.module';
     FinancialModule,
     PrivacyModule,
     JurisdictionModule,
+    SlaModule,
+    VersionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
