@@ -195,6 +195,7 @@ model Contract {
   chatSessions     ChatSession[]
   negotiationRounds NegotiationRound[]
   signingRequests  SigningRequest[]
+  procurementRef   ProcurementRef?
 
   @@map("contracts")
 }
@@ -524,6 +525,25 @@ model AuditLog {
   createdAt  DateTime @default(now())
 
   @@map("audit_logs")
+}
+
+// ─── Procurement ───────────────────────────────────────────────────────────────
+
+model ProcurementRef {
+  id                  String   @id @default(uuid())
+  contractId          String   @unique
+  contract            Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  purchaseOrderNumber String?
+  tenderReference     String?
+  procurementCategory String?  // IT | FACILITIES | SERVICES | GOODS | CONSTRUCTION | CONSULTING | OTHER
+  budgetCode          String?
+  budgetAmount        Decimal? @db.Decimal(15, 2)
+  currency            String?  @default("USD")
+  vendorOnboardingRef String?
+  procurementNotes    String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  @@map("procurement_refs")
 }
 
 // ─── E-Signature ───────────────────────────────────────────────────────────────
