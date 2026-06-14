@@ -13,6 +13,7 @@ import {
   Users,
   LogOut,
   Search,
+  Building2,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/renewals', label: 'Renewals', icon: RefreshCw },
   { href: '/comparison', label: 'Compare', icon: GitCompare },
   { href: '/search', label: 'Semantic Search', icon: Search },
+  { href: '/counterparties', label: 'Vendors', icon: Building2 },
 ];
 
 const adminItems = [
