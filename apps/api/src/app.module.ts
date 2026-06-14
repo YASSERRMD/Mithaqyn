@@ -13,6 +13,7 @@ import { ClausesModule } from './modules/clauses/clauses.module';
 import { RisksModule } from './modules/risks/risks.module';
 import { ObligationsModule } from './modules/obligations/obligations.module';
 import { RenewalsModule } from './modules/renewals/renewals.module';
+import { ComparisonModule } from './modules/comparison/comparison.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RenewalsModule } from './modules/renewals/renewals.module';
     RisksModule,
     ObligationsModule,
     RenewalsModule,
+    ComparisonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

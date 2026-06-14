@@ -24,7 +24,7 @@ const navItems = [
   { href: '/risks', label: 'Risk Analysis', icon: AlertTriangle },
   { href: '/obligations', label: 'Obligations', icon: CheckSquare },
   { href: '/renewals', label: 'Renewals', icon: RefreshCw },
-  { href: '/compare', label: 'Compare', icon: GitCompare },
+  { href: '/comparison', label: 'Compare', icon: GitCompare },
 ];
 
 const adminItems = [
