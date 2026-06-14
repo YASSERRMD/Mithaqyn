@@ -23,6 +23,8 @@ import { RagModule } from './modules/rag/rag.module';
 import { ApprovalsModule } from './modules/approvals/approvals.module';
 import { NegotiationModule } from './modules/negotiation/negotiation.module';
 import { EsignatureModule } from './modules/esignature/esignature.module';
+import { ProcurementModule } from './modules/procurement/procurement.module';
+import { FinancialModule } from './modules/financial/financial.module';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { EsignatureModule } from './modules/esignature/esignature.module';
     ApprovalsModule,
     NegotiationModule,
     EsignatureModule,
+    ProcurementModule,
+    FinancialModule,
   ],
   controllers: [AppController],
   providers: [AppService],
