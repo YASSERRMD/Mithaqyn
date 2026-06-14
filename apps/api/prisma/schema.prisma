@@ -128,6 +128,7 @@ model User {
   auditLogs       AuditLog[]
   playbooks       Playbook[]
   clauseTemplates ClauseTemplate[]
+  importJobs      ImportJob[]
 
   @@map("users")
 }
@@ -664,4 +665,42 @@ model ClauseTemplate {
   updatedAt    DateTime @updatedAt
 
   @@map("clause_templates")
+}
+
+// ─── Contract Import Jobs ──────────────────────────────────────────────────────
+
+enum ImportSource {
+  EMAIL_ATTACHMENT
+  GOOGLE_DRIVE
+  ONEDRIVE
+  DROPBOX
+  URL
+  LOCAL_UPLOAD
+}
+
+enum ImportStatus {
+  PENDING
+  DOWNLOADING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model ImportJob {
+  id           String       @id @default(uuid())
+  source       ImportSource
+  sourceRef    String?      // email message ID, drive file ID, URL, etc.
+  status       ImportStatus @default(PENDING)
+  fileName     String?
+  mimeType     String?
+  filePath     String?      // temp file path after download
+  contractId   String?      // set after successful contract creation
+  errorMessage String?
+  metadata     Json?        // source-specific metadata
+  createdById  String
+  createdBy    User         @relation(fields: [createdById], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("import_jobs")
 }
