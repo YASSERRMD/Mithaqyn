@@ -14,6 +14,8 @@ import {
   LogOut,
   Search,
   Building2,
+  ShoppingCart,
+  DollarSign,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useRouter } from 'next/navigation';
@@ -29,6 +31,7 @@ const navItems = [
   { href: '/comparison', label: 'Compare', icon: GitCompare },
   { href: '/search', label: 'Semantic Search', icon: Search },
   { href: '/counterparties', label: 'Vendors', icon: Building2 },
+  { href: '/procurement', label: 'Procurement', icon: ShoppingCart },
 ];
 
 const adminItems = [
