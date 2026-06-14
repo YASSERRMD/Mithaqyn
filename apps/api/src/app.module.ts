@@ -16,6 +16,7 @@ import { RenewalsModule } from './modules/renewals/renewals.module';
 import { ComparisonModule } from './modules/comparison/comparison.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { OcrModule } from './modules/ocr/ocr.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AuditModule } from './modules/audit/audit.module';
     ComparisonModule,
     DashboardModule,
     AuditModule,
+    OcrModule,
   ],
   controllers: [AppController],
   providers: [AppService],
