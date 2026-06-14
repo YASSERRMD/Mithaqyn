@@ -20,6 +20,7 @@ import { LifecycleModule } from './modules/lifecycle/lifecycle.module';
 import { OcrModule } from './modules/ocr/ocr.module';
 import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 import { RagModule } from './modules/rag/rag.module';
+import { ApprovalsModule } from './modules/approvals/approvals.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { RagModule } from './modules/rag/rag.module';
     OcrModule,
     EmbeddingsModule,
     RagModule,
+    ApprovalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
