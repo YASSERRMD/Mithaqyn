@@ -9,6 +9,7 @@ import { UsersModule } from './modules/users/users.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { CounterpartiesModule } from './modules/counterparties/counterparties.module';
 import { AIModule } from './modules/ai/ai.module';
+import { ClausesModule } from './modules/clauses/clauses.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AIModule } from './modules/ai/ai.module';
     ContractsModule,
     CounterpartiesModule,
     AIModule,
+    ClausesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
