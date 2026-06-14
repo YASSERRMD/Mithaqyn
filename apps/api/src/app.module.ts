@@ -21,6 +21,7 @@ import { OcrModule } from './modules/ocr/ocr.module';
 import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
 import { RagModule } from './modules/rag/rag.module';
 import { ApprovalsModule } from './modules/approvals/approvals.module';
+import { NegotiationModule } from './modules/negotiation/negotiation.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ApprovalsModule } from './modules/approvals/approvals.module';
     EmbeddingsModule,
     RagModule,
     ApprovalsModule,
+    NegotiationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
