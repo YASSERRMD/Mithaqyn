@@ -11,6 +11,7 @@ import { CounterpartiesModule } from './modules/counterparties/counterparties.mo
 import { AIModule } from './modules/ai/ai.module';
 import { ClausesModule } from './modules/clauses/clauses.module';
 import { RisksModule } from './modules/risks/risks.module';
+import { ObligationsModule } from './modules/obligations/obligations.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RisksModule } from './modules/risks/risks.module';
     AIModule,
     ClausesModule,
     RisksModule,
+    ObligationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
