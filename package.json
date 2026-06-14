@@ -1,0 +1,30 @@
+{
+  "name": "mithaqyn",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mithaqyn — Enterprise Contract Intelligence Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "yarn workspace @mithaqyn/api dev",
+    "dev:web": "yarn workspace @mithaqyn/web dev",
+    "dev": "concurrently \"yarn dev:api\" \"yarn dev:web\"",
+    "build:api": "yarn workspace @mithaqyn/api build",
+    "build:web": "yarn workspace @mithaqyn/web build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "test": "yarn workspaces run test"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
+}
