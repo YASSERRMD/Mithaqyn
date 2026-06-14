@@ -14,6 +14,7 @@ import { RisksModule } from './modules/risks/risks.module';
 import { ObligationsModule } from './modules/obligations/obligations.module';
 import { RenewalsModule } from './modules/renewals/renewals.module';
 import { ComparisonModule } from './modules/comparison/comparison.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ComparisonModule } from './modules/comparison/comparison.module';
     ObligationsModule,
     RenewalsModule,
     ComparisonModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
