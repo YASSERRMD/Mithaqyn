@@ -15,6 +15,7 @@ import { ObligationsModule } from './modules/obligations/obligations.module';
 import { RenewalsModule } from './modules/renewals/renewals.module';
 import { ComparisonModule } from './modules/comparison/comparison.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { AuditModule } from './modules/audit/audit.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     RenewalsModule,
     ComparisonModule,
     DashboardModule,
+    AuditModule,
   ],
   controllers: [AppController],
   providers: [AppService],
