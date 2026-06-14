@@ -25,6 +25,8 @@ import { NegotiationModule } from './modules/negotiation/negotiation.module';
 import { EsignatureModule } from './modules/esignature/esignature.module';
 import { ProcurementModule } from './modules/procurement/procurement.module';
 import { FinancialModule } from './modules/financial/financial.module';
+import { PrivacyModule } from './modules/privacy/privacy.module';
+import { JurisdictionModule } from './modules/jurisdiction/jurisdiction.module';
 
 @Module({
   imports: [
@@ -60,6 +62,8 @@ import { FinancialModule } from './modules/financial/financial.module';
     EsignatureModule,
     ProcurementModule,
     FinancialModule,
+    PrivacyModule,
+    JurisdictionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
