@@ -33,6 +33,8 @@ import { PlaybookModule } from './modules/playbook/playbook.module';
 import { ClauseLibraryModule } from './modules/clause-library/clause-library.module';
 import { RedlineModule } from './modules/redline/redline.module';
 import { ImportModule } from './modules/import/import.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -76,6 +78,8 @@ import { ImportModule } from './modules/import/import.module';
     ClauseLibraryModule,
     RedlineModule,
     ImportModule,
+    NotificationsModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
