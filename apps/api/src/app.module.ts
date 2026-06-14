@@ -18,6 +18,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { OcrModule } from './modules/ocr/ocr.module';
 import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
+import { RagModule } from './modules/rag/rag.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { EmbeddingsModule } from './modules/embeddings/embeddings.module';
     AuditModule,
     OcrModule,
     EmbeddingsModule,
+    RagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
