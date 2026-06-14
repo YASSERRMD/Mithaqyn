@@ -29,6 +29,8 @@ import { PrivacyModule } from './modules/privacy/privacy.module';
 import { JurisdictionModule } from './modules/jurisdiction/jurisdiction.module';
 import { SlaModule } from './modules/sla/sla.module';
 import { VersionsModule } from './modules/versions/versions.module';
+import { PlaybookModule } from './modules/playbook/playbook.module';
+import { ClauseLibraryModule } from './modules/clause-library/clause-library.module';
 
 @Module({
   imports: [
@@ -68,6 +70,8 @@ import { VersionsModule } from './modules/versions/versions.module';
     JurisdictionModule,
     SlaModule,
     VersionsModule,
+    PlaybookModule,
+    ClauseLibraryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

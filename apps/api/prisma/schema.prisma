@@ -124,8 +124,10 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  contracts    Contract[]
-  auditLogs    AuditLog[]
+  contracts       Contract[]
+  auditLogs       AuditLog[]
+  playbooks       Playbook[]
+  clauseTemplates ClauseTemplate[]
 
   @@map("users")
 }
@@ -609,4 +611,57 @@ model SlaRecord {
   createdAt   DateTime  @default(now())
 
   @@map("sla_records")
+}
+
+// ─── Legal Playbook Engine ─────────────────────────────────────────────────────
+
+model Playbook {
+  id           String         @id @default(uuid())
+  name         String
+  description  String?
+  contractType String?        // MSA | NDA | SLA | EMPLOYMENT | VENDOR | OTHER
+  isActive     Boolean        @default(true)
+  createdById  String
+  createdBy    User           @relation(fields: [createdById], references: [id])
+  rules        PlaybookRule[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("playbooks")
+}
+
+model PlaybookRule {
+  id           String   @id @default(uuid())
+  playbookId   String
+  playbook     Playbook @relation(fields: [playbookId], references: [id], onDelete: Cascade)
+  ruleType     String   // MUST_HAVE | MUST_NOT_HAVE | PREFERRED | FALLBACK_POSITION
+  clauseType   String   // e.g. "Liability Cap" | "Indemnification" | "Governing Law"
+  description  String
+  standardText String?
+  fallbackText String?
+  priority     Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("playbook_rules")
+}
+
+// ─── Clause Library ────────────────────────────────────────────────────────────
+
+model ClauseTemplate {
+  id           String   @id @default(uuid())
+  title        String
+  clauseType   String
+  jurisdiction String?
+  contractType String?
+  version      String   @default("1.0")
+  content      String   @db.Text
+  tags         String[]
+  isFavorite   Boolean  @default(false)
+  usageCount   Int      @default(0)
+  createdById  String
+  createdBy    User     @relation(fields: [createdById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("clause_templates")
 }
